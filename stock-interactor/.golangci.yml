@@ -1,0 +1,32 @@
+version: "2"
+run:
+  concurrency: 16
+linters:
+  default: all
+  disable:
+    - containedctx
+    - dupword
+    - exhaustruct
+    - funlen
+    - gochecknoglobals
+    - ireturn
+    - lll
+    - mnd
+    - nolintlint
+    - tagalign
+    - tagliatelle
+    - varnamelen
+    - cyclop
+    - gocognit
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
