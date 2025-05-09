@@ -4,22 +4,20 @@ run:
 linters:
   fast: false
   disable:
-    # deprecated
-    - exportloopref
-    # Неиспользуемые
+    - lll
     - exportloopref
     - containedctx
+    - mnd
     - cyclop
     - exhaustruct
-    - funlen
-    - gochecknoglobals
-    - gosmopolitan
-    - ireturn
-    - lll
-    - mnd
     - nolintlint
+    - funlen
     - nonamedreturns
+    - gochecknoglobals
     - tagalign
+    - gosmopolitan
     - tagliatelle
+    - ireturn
     - varnamelen
+    - maintidx
   enable-all: true
