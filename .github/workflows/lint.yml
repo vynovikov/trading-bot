@@ -1,0 +1,33 @@
+name: Some ci
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+    lint:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-go@v5
+          with:
+            go-version: 1.24.2
+
+        - name: Cache golangci-lint binary
+          id: cache-golangci-lint
+          uses: actions/cache@v3
+          with:
+            path: ~/go/bin/golangci-lint
+            key: golangci-lint-${{ runner.os }}-${{ hashFiles('**/go.mod') }}
+            restore-keys: |
+                golangci-lint-${{ runner.os }}-
+
+        - name: Install golangci-lint if not cached
+          if: steps.cache-golangci-lint.outputs.cache-hit != 'true'
+          run: |
+            go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+        - name: Run golangci-lint
+          run: |
+            cd ./backend
+            ~/go/bin/golangci-lint run
