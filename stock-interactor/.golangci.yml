@@ -1,32 +1,25 @@
-version: 1
+run:
+  concurrency: 16
+  timeout: 5m
 linters:
-  enable-all: true
+  fast: false
   disable:
+    # deprecated
+    - exportloopref
+    # Неиспользуемые
+    - exportloopref
     - containedctx
-    - dupword
+    - cyclop
     - exhaustruct
     - funlen
     - gochecknoglobals
+    - gosmopolitan
     - ireturn
     - lll
     - mnd
     - nolintlint
+    - nonamedreturns
     - tagalign
     - tagliatelle
     - varnamelen
-    - cyclop
-    - gocognit
-
-linters-settings:
-  gofmt:
-    simplify: true
-  gofumpt:
-    extra-rules: true
-  goimports:
-    local-prefixes: github.com/vynovikov/stock-interactor
-
-exclude:
-  path:
-    - third_party
-    - builtin
-    - examples
+  enable-all: true
