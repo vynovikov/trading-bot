@@ -26,6 +26,7 @@ linters-settings:
     local-prefixes: github.com/vynovikov/stock-interactor
 
 exclude:
-  - third_party$
-  - builtin$
-  - examples$
+  path:
+    - third_party
+    - builtin
+    - examples
