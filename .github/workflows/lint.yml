@@ -30,4 +30,4 @@ jobs:
         - name: Run golangci-lint
           run: |
             cd ./stock-interactor
-            ~/go/bin/golangci-lint run --config ./golangci.yml
+            ~/go/bin/golangci-lint run --config ./.golangci.yml
