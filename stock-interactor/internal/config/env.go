@@ -6,7 +6,9 @@ import (
 )
 
 type ENV struct {
-	AddressGRPC string `env:"ADDRESS_GRPC,required"`
+	BinanceCandlesLimit    int    `env:"BINANCE_CANDLES_LIMIT" envDefault:"1000"`
+	TransportSemaphoreSize int    `env:"TRANSPORT_SEMAPHORE_SIZE" envDefault:"4"`
+	AddressGRPC            string `env:"ADDRESS_GRPC,required"`
 }
 
 func Parse() (ENV, error) {
