@@ -27,6 +27,7 @@ jobs:
           if: steps.cache-golangci-lint.outputs.cache-hit != 'true'
           run: |
             go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
+
         - name: Run golangci-lint
           run: |
             cd ./stock-interactor
