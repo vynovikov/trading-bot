@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package interactor;
+
+option go_package = "github.com/trading-bot/stock-interactor/internal/api/pb;pb";
+
+service HistoryService {
+    rpc GetHistory(HistoryRequest) returns (stream HistoryResponse);
+}
+
+message HistoryRequest {
+    string symbol = 1;
+    string interval = 2;
+    int64 from_timestamp = 3;
+    int64 to_timestamp = 4;
+}
+message HistoryResponse {
+    repeated Candle candles = 1;
+}
+
+message Candle {
+    int64 open_time = 1; // close_time = open_time + interval
+    double open = 2;
+    double high = 3;
+    double low = 4;
+    double close = 5;
+    double volume = 6;
+}
