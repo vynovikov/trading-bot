@@ -1,7 +1,27 @@
 run:
   timeout: 5m
+  skip-files:
+    - ".*_test\\.go"
+
 linters:
-  fast: false
+  enable:
+    - govet
+    - revive
+    - staticcheck
+    - errcheck
+    - unused
+    - gosimple
+    - ineffassign
+    - gocritic
+    - bodyclose
+    - gosec
+    - gofmt
+    - misspell
+    - depguard
+    - dupl
+    - nakedret
+    - prealloc
+    - unconvert
   disable:
     - lll
     - exportloopref
@@ -12,4 +32,4 @@ linters:
     - funlen
     - nonamedreturns
     - gochecknoglobals
-  enable-all: true
+
