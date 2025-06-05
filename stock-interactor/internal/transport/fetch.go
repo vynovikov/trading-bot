@@ -34,7 +34,7 @@ func fetch(ctx context.Context, history entities.History) ([]entities.Candle, er
 		return nil, err
 	}
 
-	result := make([]entities.Candle, 0, len(raw))
+	result := make([]entities.Candle, len(raw))
 	for idx, val := range raw {
 		if len(val) < 7 {
 			return result, entities.ErrInvalidLength

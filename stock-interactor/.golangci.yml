@@ -1,5 +1,4 @@
 run:
-  concurrency: 16
   timeout: 5m
 linters:
   fast: false
@@ -7,17 +6,10 @@ linters:
     - lll
     - exportloopref
     - containedctx
-    - mnd
     - cyclop
     - exhaustruct
     - nolintlint
     - funlen
     - nonamedreturns
     - gochecknoglobals
-    - tagalign
-    - gosmopolitan
-    - tagliatelle
-    - ireturn
-    - varnamelen
-    - maintidx
   enable-all: true

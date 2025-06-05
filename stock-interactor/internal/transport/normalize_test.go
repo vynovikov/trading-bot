@@ -29,16 +29,16 @@ func (s *historySuite) TestNormalize() {
 			history: entities.History{
 				Symbol:        "AAPL",
 				Interval:      "15m",
-				FromTimestamp: 1617187200,
-				ToTimestamp:   1617273600,
+				FromTimestamp: 1617187200000,
+				ToTimestamp:   1617273600000,
 			},
 			limit: 1000,
 			wantEntities: []entities.History{
 				{
 					Symbol:        "AAPL",
 					Interval:      "15m",
-					FromTimestamp: 1617187200,
-					ToTimestamp:   1617273600,
+					FromTimestamp: 1617187200000,
+					ToTimestamp:   1617273600000,
 				},
 			},
 			wantError: nil,
@@ -48,22 +48,41 @@ func (s *historySuite) TestNormalize() {
 			history: entities.History{
 				Symbol:        "AAPL",
 				Interval:      "15m",
-				FromTimestamp: 1617187200,
-				ToTimestamp:   1618273600,
+				FromTimestamp: 1617187200000,
+				ToTimestamp:   1618273600000,
 			},
 			limit: 1000,
 			wantEntities: []entities.History{
 				{
 					Symbol:        "AAPL",
 					Interval:      "15m",
-					FromTimestamp: 1617187200,
-					ToTimestamp:   1618087200,
+					FromTimestamp: 1617187200000,
+					ToTimestamp:   1618087200000,
 				},
 				{
 					Symbol:        "AAPL",
 					Interval:      "15m",
-					FromTimestamp: 1618087200,
-					ToTimestamp:   1618273600,
+					FromTimestamp: 1618087200000,
+					ToTimestamp:   1618273600000,
+				},
+			},
+			wantError: nil,
+		},
+		{
+			name: "2. Real 1",
+			history: entities.History{
+				Symbol:        "BTCUSDT",
+				Interval:      "1m",
+				FromTimestamp: 1704067200000,
+				ToTimestamp:   1704067500000,
+			},
+			limit: 1000,
+			wantEntities: []entities.History{
+				{
+					Symbol:        "BTCUSDT",
+					Interval:      "1m",
+					FromTimestamp: 1704067200000,
+					ToTimestamp:   1704067500000,
 				},
 			},
 			wantError: nil,

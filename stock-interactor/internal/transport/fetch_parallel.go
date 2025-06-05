@@ -11,13 +11,14 @@ func (t transportStruct) FetchParallel(
 	ctx context.Context,
 	normalizedHistoryEntities []entities.History,
 	resChan chan<- []entities.Candle,
+	errChan chan<- error,
 ) error {
 	semChan := make(chan struct{}, t.limit)
-	errChan := make(chan error, len(normalizedHistoryEntities))
 	wg := &sync.WaitGroup{}
 
+	wg.Add(len(normalizedHistoryEntities))
+
 	for _, historyEntity := range normalizedHistoryEntities {
-		wg.Add(1)
 
 		go func(history entities.History) {
 			defer wg.Done()
@@ -35,13 +36,15 @@ func (t transportStruct) FetchParallel(
 				resChan <- result
 			case <-ctx.Done():
 				errChan <- ctx.Err()
-
 			}
 		}(historyEntity)
 	}
-	wg.Wait()
-	close(resChan)
-	close(errChan)
+
+	go func() {
+		wg.Wait()
+		close(resChan)
+		close(errChan)
+	}()
 
 	return nil
 }

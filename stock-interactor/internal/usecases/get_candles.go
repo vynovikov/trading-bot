@@ -1,12 +1,17 @@
 package usecases
 
-import "github.com/trading-bot/stock-interactor/internal/entities"
+import (
+	"context"
+
+	"github.com/trading-bot/stock-interactor/internal/entities"
+)
 
 func (d domainStruct) GetCandles(
+	ctx context.Context,
 	historyEntity entities.History,
 ) (
 	<-chan []entities.Candle,
-	error,
+	<-chan error,
 ) {
-	return d.transport.GetCandles(historyEntity)
+	return d.transport.GetCandles(ctx, historyEntity)
 }

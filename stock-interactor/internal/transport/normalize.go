@@ -17,7 +17,8 @@ func Normalize(
 		return nil, nil
 	}
 	var next time.Time
-	start, end := time.Unix(historyEntity.FromTimestamp, 0), time.Unix(historyEntity.ToTimestamp, 0)
+	start, end := time.Unix(0, historyEntity.FromTimestamp*int64(time.Millisecond)),
+		time.Unix(0, historyEntity.ToTimestamp*int64(time.Millisecond))
 
 	interval, err := time.ParseDuration(historyEntity.Interval)
 	if err != nil {
@@ -36,8 +37,8 @@ func Normalize(
 		normalizedHistoryEntities = append(normalizedHistoryEntities, entities.History{
 			Symbol:        historyEntity.Symbol,
 			Interval:      historyEntity.Interval,
-			FromTimestamp: start.Unix(),
-			ToTimestamp:   next.Unix(),
+			FromTimestamp: start.UnixMilli(),
+			ToTimestamp:   next.UnixMilli(),
 		})
 
 		start = next

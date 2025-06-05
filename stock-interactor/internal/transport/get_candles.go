@@ -2,31 +2,41 @@ package transport
 
 import (
 	"context"
-	"time"
 
 	"github.com/trading-bot/stock-interactor/internal/entities"
 )
 
 func (t transportStruct) GetCandles(
+	ctx context.Context,
 	historyEntity entities.History,
 ) (
 	<-chan []entities.Candle,
-	error,
+	<-chan error,
 ) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	resChan := make(chan []entities.Candle, t.limit)
 
 	normalizedHistoryEntities, err := Normalize(historyEntity, t.limit)
+
 	if err != nil {
-		return nil, err
+		errChan := make(chan error, 1)
+		resChan := make(chan []entities.Candle, 1)
+		errChan <- err
+		close(resChan)
+		close(errChan)
+
+		return resChan, errChan
 	}
 
-	err = t.FetchParallel(ctx, normalizedHistoryEntities, resChan)
+	resChan := make(chan []entities.Candle, t.limit)
+	errChan := make(chan error, len(normalizedHistoryEntities))
+
+	err = t.FetchParallel(ctx, normalizedHistoryEntities, resChan, errChan)
 	if err != nil {
-		return nil, err
+		errChan <- err
+		close(resChan)
+		close(errChan)
+
+		return resChan, errChan
 	}
 
-	return resChan, nil
+	return resChan, errChan
 }
