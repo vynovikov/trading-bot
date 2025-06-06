@@ -1,6 +1,6 @@
 .PHONY: proto clean
 
-proto:
+proto_gen:
 	@echo "🛠️  Generating protobuf code..."
 	python3 -m grpc_tools.protoc \
 		-I proto \

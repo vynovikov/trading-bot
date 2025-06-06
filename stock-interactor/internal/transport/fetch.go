@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	cerrors "github.com/cockroachdb/errors"
 	resty "github.com/go-resty/resty/v2"
 	"github.com/trading-bot/stock-interactor/internal/entities"
 )
@@ -31,28 +32,82 @@ func fetch(ctx context.Context, history entities.History) ([]entities.Candle, er
 		Get("https://api.binance.com/api/v3/klines")
 
 	if err != nil {
-		return nil, err
+		return nil, cerrors.Wrap(err, "")
 	}
 
 	result := make([]entities.Candle, len(raw))
 	for idx, val := range raw {
-		if len(val) < 7 {
+		if len(val) < 11 {
 			return result, entities.ErrInvalidLength
 		}
 
-		open, _ := strconv.ParseFloat(val[1].(string), 64)
-		high, _ := strconv.ParseFloat(val[2].(string), 64)
-		low, _ := strconv.ParseFloat(val[3].(string), 64)
-		closeVal, _ := strconv.ParseFloat(val[4].(string), 64)
-		volume, _ := strconv.ParseFloat(val[5].(string), 64)
+		openTime, ok := val[0].(float64)
+		if !ok {
+			return nil, cerrors.Wrap(entities.ErrInvalidOpenTime, "failed to parse open time")
+		}
+
+		closeTime, ok := val[6].(float64)
+		if !ok {
+			return nil, cerrors.Wrap(entities.ErrInvalidCloseTime, "failed to parse close time")
+		}
+
+		tradeFloat, ok := val[8].(float64)
+		if !ok {
+			return nil, cerrors.Wrap(entities.ErrInvalidTradeCount, "failed to parse trade count")
+		}
+
+		open, err := strconv.ParseFloat(val[1].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse open price")
+		}
+
+		high, err := strconv.ParseFloat(val[2].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse high price")
+		}
+
+		low, err := strconv.ParseFloat(val[3].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse low price")
+		}
+
+		closeVal, err := strconv.ParseFloat(val[4].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse close price")
+		}
+
+		volume, err := strconv.ParseFloat(val[5].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse volume")
+		}
+
+		quoteVolume, err := strconv.ParseFloat(val[7].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse quote volume")
+		}
+
+		takerBuyBase, err := strconv.ParseFloat(val[9].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse taker buy base")
+		}
+
+		takerBuyQuote, err := strconv.ParseFloat(val[10].(string), 64)
+		if err != nil {
+			return nil, cerrors.Wrap(err, "failed to parse taker buy quote")
+		}
 
 		result[idx] = entities.Candle{
-			OpenTime: int64(val[0].(float64)),
-			Open:     open,
-			High:     high,
-			Low:      low,
-			Close:    closeVal,
-			Volume:   volume,
+			OpenTime:      openTime,
+			Open:          open,
+			High:          high,
+			Low:           low,
+			Close:         closeVal,
+			Volume:        volume,
+			CloseTime:     closeTime,
+			QuoteVolume:   quoteVolume,
+			TradeCount:    int32(tradeFloat),
+			TakerBuyBase:  takerBuyBase,
+			TakerBuyQuote: takerBuyQuote,
 		}
 	}
 

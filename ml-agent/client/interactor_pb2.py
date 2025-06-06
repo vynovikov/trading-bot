@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10interactor.proto\x12\ninteractor\"`\n\x0eHistoryRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\x10\n\x08interval\x18\x02 \x01(\t\x12\x16\n\x0e\x66rom_timestamp\x18\x03 \x01(\x03\x12\x14\n\x0cto_timestamp\x18\x04 \x01(\x03\"6\n\x0fHistoryResponse\x12#\n\x07\x63\x61ndles\x18\x01 \x03(\x0b\x32\x12.interactor.Candle\"c\n\x06\x43\x61ndle\x12\x11\n\topen_time\x18\x01 \x01(\x03\x12\x0c\n\x04open\x18\x02 \x01(\x01\x12\x0c\n\x04high\x18\x03 \x01(\x01\x12\x0b\n\x03low\x18\x04 \x01(\x01\x12\r\n\x05\x63lose\x18\x05 \x01(\x01\x12\x0e\n\x06volume\x18\x06 \x01(\x01\x32Y\n\x0eHistoryService\x12G\n\nGetHistory\x12\x1a.interactor.HistoryRequest\x1a\x1b.interactor.HistoryResponse0\x01\x42<Z:github.com/trading-bot/stock-interactor/internal/api/pb;pbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10interactor.proto\x12\ninteractor\"`\n\x0eHistoryRequest\x12\x0e\n\x06symbol\x18\x01 \x01(\t\x12\x10\n\x08interval\x18\x02 \x01(\t\x12\x16\n\x0e\x66rom_timestamp\x18\x03 \x01(\x03\x12\x14\n\x0cto_timestamp\x18\x04 \x01(\x03\"6\n\x0fHistoryResponse\x12#\n\x07\x63\x61ndles\x18\x01 \x03(\x0b\x32\x12.interactor.Candle\"\xd3\x01\n\x06\x43\x61ndle\x12\x11\n\topen_time\x18\x01 \x01(\x01\x12\x0c\n\x04open\x18\x02 \x01(\x01\x12\x0c\n\x04high\x18\x03 \x01(\x01\x12\x0b\n\x03low\x18\x04 \x01(\x01\x12\r\n\x05\x63lose\x18\x05 \x01(\x01\x12\x0e\n\x06volume\x18\x06 \x01(\x01\x12\x12\n\nclose_time\x18\x07 \x01(\x01\x12\x14\n\x0cquote_volume\x18\x08 \x01(\x01\x12\x13\n\x0btrade_count\x18\t \x01(\x05\x12\x16\n\x0etaker_buy_base\x18\n \x01(\x01\x12\x17\n\x0ftaker_buy_quote\x18\x0b \x01(\x01\x32Y\n\x0eHistoryService\x12G\n\nGetHistory\x12\x1a.interactor.HistoryRequest\x1a\x1b.interactor.HistoryResponse0\x01\x42<Z:github.com/trading-bot/stock-interactor/internal/api/pb;pbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,8 +36,8 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_HISTORYREQUEST']._serialized_end=128
   _globals['_HISTORYRESPONSE']._serialized_start=130
   _globals['_HISTORYRESPONSE']._serialized_end=184
-  _globals['_CANDLE']._serialized_start=186
-  _globals['_CANDLE']._serialized_end=285
-  _globals['_HISTORYSERVICE']._serialized_start=287
-  _globals['_HISTORYSERVICE']._serialized_end=376
+  _globals['_CANDLE']._serialized_start=187
+  _globals['_CANDLE']._serialized_end=398
+  _globals['_HISTORYSERVICE']._serialized_start=400
+  _globals['_HISTORYSERVICE']._serialized_end=489
 # @@protoc_insertion_point(module_scope)

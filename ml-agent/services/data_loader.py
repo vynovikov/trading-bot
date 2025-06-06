@@ -35,6 +35,11 @@ def get_or_fetch_candles(
                         "low": candle.low,
                         "close": candle.close,
                         "volume": candle.volume,
+                        "close_time": candle.close_time,
+                        "quote_volume": candle.quote_volume,
+                        "trade_count": candle.trade_count,
+                        "taker_buy_base": candle.taker_buy_base,
+                        "taker_buy_quote": candle.taker_buy_quote,
                     }
                 )
     except grpc.RpcError as e:
@@ -43,4 +48,7 @@ def get_or_fetch_candles(
     df = pd.DataFrame(all_candles)
     df.to_csv(filepath, index=False)
     print(f"✅ Saved to {filepath}")
+
+    df["open_time"] = pd.to_datetime(df["open_time"].astype("int64"), unit="ms")
+    df["close_time"] = pd.to_datetime(df["close_time"].astype("int64"), unit="ms")
     return df

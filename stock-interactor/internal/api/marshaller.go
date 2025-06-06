@@ -34,11 +34,16 @@ func marshalHistoryResponse(candles []entities.Candle) *pb.HistoryResponse {
 
 func marshalCandle(candle entities.Candle) *pb.Candle {
 	return &pb.Candle{
-		OpenTime: candle.OpenTime,
-		Open:     candle.Open,
-		Close:    candle.Close,
-		High:     candle.High,
-		Low:      candle.Low,
-		Volume:   candle.Volume,
+		OpenTime:      candle.OpenTime,
+		Open:          candle.Open,
+		Close:         candle.Close,
+		High:          candle.High,
+		Low:           candle.Low,
+		Volume:        candle.Volume,
+		CloseTime:     candle.CloseTime,
+		QuoteVolume:   candle.QuoteVolume,
+		TradeCount:    candle.TradeCount,
+		TakerBuyBase:  candle.TakerBuyBase,
+		TakerBuyQuote: candle.TakerBuyQuote,
 	}
 }

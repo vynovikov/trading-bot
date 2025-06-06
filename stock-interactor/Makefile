@@ -1,4 +1,4 @@
-generate:
+proto_gen:
 	protoc \
 		--proto_path=internal/api/proto \
 		--go_out=internal/api/pb --go_opt=paths=source_relative \

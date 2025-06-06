@@ -19,10 +19,15 @@ message HistoryResponse {
 }
 
 message Candle {
-    int64 open_time = 1; // close_time = open_time + interval
-    double open = 2;
-    double high = 3;
-    double low = 4;
-    double close = 5;
-    double volume = 6;
+  double open_time = 1;         // Время открытия (мс)
+  double open = 2;             // Цена открытия
+  double high = 3;             // Максимальная цена
+  double low = 4;              // Минимальная цена
+  double close = 5;            // Цена закрытия
+  double volume = 6;           // Объём в базовом активе
+  double close_time = 7;        // Время закрытия (мс)
+  double quote_volume = 8;     // Объём в котируемом активе
+  int32 trade_count = 9;       // Количество сделок
+  double taker_buy_base = 10;  // Объём покупок у мейкеров (в base asset)
+  double taker_buy_quote = 11; // Объём покупок у мейкеров (в quote asset)
 }
