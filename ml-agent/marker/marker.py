@@ -80,10 +80,8 @@ class Marker:
             # ):
             #    segment.Params.finish = True
             #    segment.Trend.append(c1)
-            x = self.delta(segment)
-            case1 = segment.Params.finish == True
-            case2 = x > 2.5 * avg
-            if segment.Params.finish and x > 2.5 * avg:
+
+            if segment.Params.finish and self.delta(segment) > 2.5 * avg:
                 segments.append(segment)
 
             i += 1
