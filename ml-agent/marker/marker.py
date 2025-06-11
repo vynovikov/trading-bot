@@ -24,7 +24,7 @@ class Marker:
             c2 = self.idx_to_candle(i + 1, df)
             c3 = self.idx_to_candle(i + 2, df)
 
-            if c1.low < c2.low < c3.low and c1.high < c2.high < c3.high:
+            if c1.low <= c2.low <= c3.low and c1.high <= c2.high <= c3.high:
                 match segment.Params.direction:
                     case Direction.UNKNOWN:
                         self.add_a_to_segment(df, segment, i)
@@ -34,14 +34,21 @@ class Marker:
                         segment.Trend.append(c2)
                         segment.Trend.append(c3)
 
-                        i += 2
+                        i += 3
                         continue
                     case Direction.UP:
                         segment.Trend.append(c1)
+                        segment.Trend.append(c2)
+                        segment.Trend.append(c3)
+
+                        i += 3
                         continue
                     case Direction.DOWN:
                         segment.Trend.append(c1)
                         segment.Params.finish = True
+
+                        i += 1
+                        continue
             if c1.low > c2.low > c3.low and c1.high > c2.high > c3.high:
                 match segment.Params.direction:
                     case Direction.UNKNOWN:
@@ -54,27 +61,32 @@ class Marker:
                         segment.Params.finish = True
 
             if (
-                c1.low <= c2.low
-                and c1.low <= c3.low
-                and c1.high <= c2.high
-                and c1.high <= c3.high
+                c1.high <= c2.high
+                and c1.high > c3.high
                 and segment.Params.direction == Direction.UP
             ):
                 segment.Params.finish = True
                 segment.Trend.append(c1)
+                segment.Trend.append(c2)
 
-            if (
-                c1.low >= c2.low
-                and c1.low >= c3.low
-                and c1.high >= c2.high
-                and c1.high >= c3.high
-                and segment.Params.direction == Direction.DOWN
-            ):
-                segment.Params.finish = True
-                segment.Trend.append(c1)
+                i += 2
 
-            if segment.Params.finish and self.delta(segment) > 2.5 * avg:
+            # if (
+            #    c1.low >= c2.low
+            #    and c1.low >= c3.low
+            #    and c1.high >= c2.high
+            #    and c1.high >= c3.high
+            #    and segment.Params.direction == Direction.DOWN
+            # ):
+            #    segment.Params.finish = True
+            #    segment.Trend.append(c1)
+            x = self.delta(segment)
+            case1 = segment.Params.finish == True
+            case2 = x > 2.5 * avg
+            if segment.Params.finish and x > 2.5 * avg:
                 segments.append(segment)
+
+            i += 1
 
         return segments
 

@@ -3,6 +3,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -170,18 +171,18 @@ test_cases = [
                     "volume": 1000,
                 },
                 {
-                    "high": 1.13,
-                    "low": 1.08,
+                    "high": 1.11,
+                    "low": 1.07,
                     "open": 1.11,
-                    "close": 1.12,
+                    "close": 1.09,
                     "volume": 1000,
                 },
                 # Flat after trend
                 {
-                    "high": 1.14,
-                    "low": 1.10,
-                    "open": 1.12,
-                    "close": 1.13,
+                    "high": 1.12,
+                    "low": 1.07,
+                    "open": 1.09,
+                    "close": 1.08,
                     "volume": 1000,
                 },
             ]
@@ -189,17 +190,75 @@ test_cases = [
         "expected": [
             Segment(
                 Pre=[
-                    Candle(high=1.10, low=1.08, open=1.09, close=1.08, volume=1000),
-                    Candle(high=1.07, low=1.05, open=1.06, close=1.05, volume=1000),
-                    Candle(high=1.04, low=1.02, open=1.03, close=1.02, volume=1000),
+                    Candle(
+                        high=np.float64(1.00),
+                        low=np.float64(0.98),
+                        open=0.99,
+                        close=0.99,
+                        volume=1000,
+                    ),
+                    Candle(
+                        high=np.float64(1.01),
+                        low=np.float64(0.99),
+                        open=1.00,
+                        close=1.00,
+                        volume=1000,
+                    ),
+                    Candle(
+                        high=np.float64(1.02),
+                        low=1.00,
+                        open=1.01,
+                        close=1.01,
+                        volume=1000,
+                    ),
+                    Candle(
+                        high=np.float64(1.00),
+                        low=0.98,
+                        open=0.99,
+                        close=0.99,
+                        volume=1000,
+                    ),
                 ],
                 Trend=[
-                    Candle(high=1.10, low=1.08, open=1.09, close=1.08, volume=1000),
-                    Candle(high=1.07, low=1.05, open=1.06, close=1.05, volume=1000),
-                    Candle(high=1.04, low=1.02, open=1.03, close=1.02, volume=1000),
+                    Candle(
+                        high=np.float64(1.05),
+                        low=np.float64(1.02),
+                        open=np.float64(1.03),
+                        close=np.float64(1.04),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.08),
+                        low=np.float64(1.05),
+                        open=np.float64(1.06),
+                        close=np.float64(1.07),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.11),
+                        low=np.float64(1.08),
+                        open=np.float64(1.09),
+                        close=np.float64(1.10),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.12),
+                        low=np.float64(1.08),
+                        open=np.float64(1.10),
+                        close=np.float64(1.11),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.12),
+                        low=np.float64(1.08),
+                        open=np.float64(1.11),
+                        close=np.float64(1.11),
+                        volume=np.float64(1000),
+                    ),
                 ],
                 Params=TradeParams(
                     direction=Direction.UP,
+                    finish=True,
                     tp=0.0,
                     sl=0.0,
                 ),
