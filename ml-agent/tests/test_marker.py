@@ -265,106 +265,171 @@ test_cases = [
             )
         ],
     },
-    # {
-    #    "name": "3. Downtrend",
-    #    "df": pd.DataFrame(
-    #        [
-    #            # Flat candles before downtrend
-    #            {
-    #                "high": 1.15,
-    #                "low": 1.13,
-    #                "open": 1.14,
-    #                "close": 1.14,
-    #                "volume": 1000,
-    #            },
-    #            {
-    #                "high": 1.14,
-    #                "low": 1.12,
-    #                "open": 1.13,
-    #                "close": 1.13,
-    #                "volume": 1000,
-    #            },
-    #            {
-    #                "high": 1.13,
-    #                "low": 1.11,
-    #                "open": 1.12,
-    #                "close": 1.12,
-    #                "volume": 1000,
-    #            },
-    #            # Start of downtrend (strictly decreasing highs and lows)
-    #            {
-    #                "high": 1.10,
-    #                "low": 1.08,
-    #                "open": 1.09,
-    #                "close": 1.08,
-    #                "volume": 1000,
-    #            },
-    #            {
-    #                "high": 1.07,
-    #                "low": 1.05,
-    #                "open": 1.06,
-    #                "close": 1.05,
-    #                "volume": 1000,
-    #            },
-    #            {
-    #                "high": 1.04,
-    #                "low": 1.02,
-    #                "open": 1.03,
-    #                "close": 1.02,
-    #                "volume": 1000,
-    #            },
-    #            # End of downtrend (highs and lows no longer decreasing)
-    #            {
-    #                "high": 1.03,
-    #                "low": 1.01,
-    #                "open": 1.02,
-    #                "close": 1.02,
-    #                "volume": 1000,
-    #            },
-    #            {
-    #                "high": 1.03,
-    #                "low": 1.01,
-    #                "open": 1.02,
-    #                "close": 1.02,
-    #                "volume": 1000,
-    #            },
-    #            {
-    #                "high": 1.03,
-    #                "low": 1.01,
-    #                "open": 1.02,
-    #                "close": 1.02,
-    #                "volume": 1000,
-    #            },
-    #            # Flat after trend
-    #            {
-    #                "high": 1.04,
-    #                "low": 1.02,
-    #                "open": 1.03,
-    #                "close": 1.03,
-    #                "volume": 1000,
-    #            },
-    #        ]
-    #    ),
-    #    "expected": [
-    #        {
-    #            "A": [
-    #                (1.10, 1.08, 1.09, 1.08, 1000),
-    #                (1.07, 1.05, 1.06, 1.05, 1000),
-    #                (1.04, 1.02, 1.03, 1.02, 1000),
-    #            ],
-    #            "B": [
-    #                (1.03, 1.01, 1.02, 1.02, 1000),
-    #                (1.03, 1.01, 1.02, 1.02, 1000),
-    #                (1.03, 1.01, 1.02, 1.02, 1000),
-    #            ],
-    #            "Params": {
-    #                "direction": Direction.DOWN,
-    #                "tp": 0.0,
-    #                "sl": 0.0,
-    #            },
-    #        }
-    #    ],
-    # },
+    {
+        "name": "3. Downtrend",
+        "df": pd.DataFrame(
+            [
+                # Flat candles before downtrend
+                {
+                    "high": 1.15,
+                    "low": 1.13,
+                    "open": 1.14,
+                    "close": 1.14,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.14,
+                    "low": 1.12,
+                    "open": 1.13,
+                    "close": 1.13,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.13,
+                    "low": 1.11,
+                    "open": 1.12,
+                    "close": 1.12,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.15,
+                    "low": 1.13,
+                    "open": 1.14,
+                    "close": 1.14,
+                    "volume": 1000,
+                },
+                # Start of downtrend (strictly decreasing highs and lows)
+                {
+                    "high": 1.14,
+                    "low": 1.08,
+                    "open": 1.14,
+                    "close": 1.08,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.10,
+                    "low": 1.04,
+                    "open": 1.08,
+                    "close": 1.05,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.06,
+                    "low": 1.02,
+                    "open": 1.05,
+                    "close": 1.02,
+                    "volume": 1000,
+                },
+                # End of downtrend (highs and lows no longer decreasing)
+                {
+                    "high": 1.03,
+                    "low": 1.01,
+                    "open": 1.02,
+                    "close": 1.02,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.03,
+                    "low": 1.01,
+                    "open": 1.02,
+                    "close": 1.02,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.04,
+                    "low": 1.02,
+                    "open": 1.02,
+                    "close": 1.03,
+                    "volume": 1000,
+                },
+                # Flat after trend
+                {
+                    "high": 1.04,
+                    "low": 1.02,
+                    "open": 1.03,
+                    "close": 1.03,
+                    "volume": 1000,
+                },
+            ]
+        ),
+        "expected": [
+            Segment(
+                Pre=[
+                    Candle(
+                        high=np.float64(1.15),
+                        low=np.float64(1.13),
+                        open=np.float64(1.14),
+                        close=np.float64(1.14),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.14),
+                        low=np.float64(1.12),
+                        open=np.float64(1.13),
+                        close=np.float64(1.13),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.13),
+                        low=np.float64(1.11),
+                        open=np.float64(1.12),
+                        close=np.float64(1.12),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.15),
+                        low=np.float64(1.13),
+                        open=np.float64(1.14),
+                        close=np.float64(1.14),
+                        volume=np.float64(1000),
+                    ),
+                ],
+                Trend=[
+                    Candle(
+                        high=np.float64(1.14),
+                        low=np.float64(1.08),
+                        open=np.float64(1.14),
+                        close=np.float64(1.08),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.10),
+                        low=np.float64(1.04),
+                        open=np.float64(1.08),
+                        close=np.float64(1.05),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.06),
+                        low=np.float64(1.02),
+                        open=np.float64(1.05),
+                        close=np.float64(1.02),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.03),
+                        low=np.float64(1.01),
+                        open=np.float64(1.02),
+                        close=np.float64(1.02),
+                        volume=np.float64(1000),
+                    ),
+                    Candle(
+                        high=np.float64(1.03),
+                        low=np.float64(1.01),
+                        open=np.float64(1.02),
+                        close=np.float64(1.02),
+                        volume=np.float64(1000),
+                    ),
+                ],
+                Params=TradeParams(
+                    direction=Direction.DOWN,
+                    finish=True,
+                    tp=0.0,
+                    sl=0.0,
+                ),
+            )
+        ],
+    },
 ]
 
 

@@ -24,62 +24,67 @@ class Marker:
             c2 = self.idx_to_candle(i + 1, df)
             c3 = self.idx_to_candle(i + 2, df)
 
-            if c1.low <= c2.low <= c3.low and c1.high <= c2.high <= c3.high:
-                match segment.Params.direction:
+            if c1.low < c2.low < c3.low and c1.high < c2.high < c3.high:
+                match segment.get_direction():
                     case Direction.UNKNOWN:
-                        self.add_a_to_segment(df, segment, i)
-                        segment.Params.direction = Direction.UP
-
-                        segment.Trend.append(c1)
-                        segment.Trend.append(c2)
-                        segment.Trend.append(c3)
+                        segment.add_to_pre(df, i, self.a_len)
+                        segment.set_direction(Direction.UP)
+                        segment.add_to_trend(c1, c2, c3)
 
                         i += 3
                         continue
                     case Direction.UP:
-                        segment.Trend.append(c1)
-                        segment.Trend.append(c2)
-                        segment.Trend.append(c3)
+                        segment.add_to_trend(c1, c2, c3)
 
                         i += 3
                         continue
                     case Direction.DOWN:
-                        segment.Trend.append(c1)
-                        segment.Params.finish = True
+                        segment.add_to_trend(c1)
+                        segment.set_finish()
 
                         i += 1
                         continue
+
             if c1.low > c2.low > c3.low and c1.high > c2.high > c3.high:
-                match segment.Params.direction:
+                match segment.get_direction():
                     case Direction.UNKNOWN:
-                        self.add_a_to_segment(df, segment, i)
-                        segment.Params.direction = Direction.DOWN
-                        segment.Trend.append(c1)
+                        segment.add_to_pre(df, i, self.a_len)
+                        segment.set_direction(Direction.DOWN)
+                        segment.add_to_trend(c1, c2, c3)
+
+                        i += 3
+                        continue
+                    case Direction.DOWN:
+                        segment.add_to_trend(c1, c2, c3)
+
+                        i += 3
                         continue
                     case Direction.UP:
-                        segment.Trend.append(c1)
-                        segment.Params.finish = True
+                        segment.add_to_trend(c1)
+                        segment.set_finish()
+
+                        i += 1
+                        continue
 
             if (
                 c1.high <= c2.high
                 and c1.high > c3.high
-                and segment.Params.direction == Direction.UP
+                and segment.get_direction() == Direction.UP
             ):
-                segment.Params.finish = True
-                segment.Trend.append(c1)
-                segment.Trend.append(c2)
+                segment.set_finish()
+                segment.add_to_trend(c1, c2)
 
                 i += 2
 
-            # if (
-            #    c1.low >= c2.low
-            #    and c1.low >= c3.low
-            #    and c1.high >= c2.high
-            #    and c1.high >= c3.high
-            #    and segment.Params.direction == Direction.DOWN
-            # ):
-            #    segment.Params.finish = True
-            #    segment.Trend.append(c1)
+            if (
+                c1.high >= c2.high
+                and c1.high < c3.high
+                and segment.get_direction() == Direction.DOWN
+            ):
+                segment.set_finish()
+                segment.add_to_trend(c1, c2)
+
+                i += 2
 
             if segment.Params.finish and self.delta(segment) > 2.5 * avg:
                 segments.append(segment)
