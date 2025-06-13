@@ -882,6 +882,416 @@ test_cases = [
             ),
         ],
     },
+    {
+        "name": "7. Two uptrends with bearish candle in between",
+        "df": pd.DataFrame(
+            [
+                # Flat candles before first uptrend
+                {
+                    "high": 1.00,
+                    "low": 0.98,
+                    "open": 0.99,
+                    "close": 0.99,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.01,
+                    "low": 0.99,
+                    "open": 1.00,
+                    "close": 1.00,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.02,
+                    "low": 1.00,
+                    "open": 1.01,
+                    "close": 1.01,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.00,
+                    "low": 0.98,
+                    "open": 0.99,
+                    "close": 0.99,
+                    "volume": 1000,
+                },
+                # First uptrend
+                {
+                    "high": 1.05,
+                    "low": 1.02,
+                    "open": 1.03,
+                    "close": 1.04,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.08,
+                    "low": 1.05,
+                    "open": 1.06,
+                    "close": 1.07,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.11,
+                    "low": 1.08,
+                    "open": 1.09,
+                    "close": 1.10,
+                    "volume": 1000,
+                },
+                # Bearish candle (stopping uptrend)
+                {
+                    "high": 1.09,
+                    "low": 1.06,
+                    "open": 1.08,
+                    "close": 1.07,
+                    "volume": 1000,
+                },
+                # Second uptrend
+                {
+                    "high": 1.12,
+                    "low": 1.09,
+                    "open": 1.10,
+                    "close": 1.11,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.15,
+                    "low": 1.12,
+                    "open": 1.13,
+                    "close": 1.14,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.18,
+                    "low": 1.15,
+                    "open": 1.16,
+                    "close": 1.17,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.19,
+                    "low": 1.15,
+                    "open": 1.18,
+                    "close": 1.16,
+                    "volume": 1000,
+                },
+                # Bearish candle (stopping uptrend)
+                {
+                    "high": 1.18,
+                    "low": 1.15,
+                    "open": 1.16,
+                    "close": 1.17,
+                    "volume": 1000,
+                },
+            ]
+        ),
+        "expected": [
+            Segment(
+                Pre=[
+                    Candle(1.00, 0.98, 0.99, 0.99, 1000),
+                    Candle(1.01, 0.99, 1.00, 1.00, 1000),
+                    Candle(1.02, 1.00, 1.01, 1.01, 1000),
+                    Candle(1.00, 0.98, 0.99, 0.99, 1000),
+                ],
+                Trend=[
+                    Candle(1.05, 1.02, 1.03, 1.04, 1000),
+                    Candle(1.08, 1.05, 1.06, 1.07, 1000),
+                    Candle(1.11, 1.08, 1.09, 1.10, 1000),
+                ],
+                Params=TradeParams(direction=Direction.UP, finish=True, tp=0.0, sl=0.0),
+            ),
+            Segment(
+                Pre=[
+                    Candle(1.00, 0.98, 0.99, 0.99, 1000),
+                    Candle(1.05, 1.02, 1.03, 1.04, 1000),
+                    Candle(1.08, 1.05, 1.06, 1.07, 1000),
+                    Candle(1.11, 1.08, 1.09, 1.10, 1000),
+                ],
+                Trend=[
+                    Candle(1.09, 1.06, 1.08, 1.07, 1000),
+                    Candle(1.12, 1.09, 1.10, 1.11, 1000),
+                    Candle(1.15, 1.12, 1.13, 1.14, 1000),
+                    Candle(1.18, 1.15, 1.16, 1.17, 1000),
+                    Candle(1.19, 1.15, 1.18, 1.16, 1000),
+                ],
+                Params=TradeParams(direction=Direction.UP, finish=True, tp=0.0, sl=0.0),
+            ),
+        ],
+    },
+    {
+        "name": "8. Downtrend followed by immediate uptrend with clear end",
+        "df": pd.DataFrame(
+            [
+                # Flat candles before downtrend
+                {
+                    "high": 1.12,
+                    "low": 1.10,
+                    "open": 1.11,
+                    "close": 1.11,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.13,
+                    "low": 1.11,
+                    "open": 1.12,
+                    "close": 1.12,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.14,
+                    "low": 1.12,
+                    "open": 1.13,
+                    "close": 1.13,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.13,
+                    "low": 1.11,
+                    "open": 1.12,
+                    "close": 1.12,
+                    "volume": 1000,
+                },
+                # Downtrend
+                {
+                    "high": 1.10,
+                    "low": 1.07,
+                    "open": 1.08,
+                    "close": 1.08,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.07,
+                    "low": 1.04,
+                    "open": 1.05,
+                    "close": 1.05,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.04,
+                    "low": 1.01,
+                    "open": 1.02,
+                    "close": 1.02,
+                    "volume": 1000,
+                },
+                # Bottom candle (turnaround point)
+                {
+                    "high": 1.03,
+                    "low": 1.00,
+                    "open": 1.01,
+                    "close": 1.02,
+                    "volume": 1000,
+                },
+                # Uptrend
+                {
+                    "high": 1.06,
+                    "low": 1.03,
+                    "open": 1.04,
+                    "close": 1.05,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.09,
+                    "low": 1.06,
+                    "open": 1.07,
+                    "close": 1.08,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.12,
+                    "low": 1.09,
+                    "open": 1.10,
+                    "close": 1.11,
+                    "volume": 1000,
+                },
+                # Breaks the uptrend
+                {
+                    "high": 1.10,
+                    "low": 1.07,
+                    "open": 1.09,
+                    "close": 1.08,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.11,
+                    "low": 1.08,
+                    "open": 1.09,
+                    "close": 1.08,
+                    "volume": 1000,
+                },
+            ]
+        ),
+        "expected": [
+            Segment(
+                Pre=[
+                    Candle(1.12, 1.10, 1.11, 1.11, 1000),
+                    Candle(1.13, 1.11, 1.12, 1.12, 1000),
+                    Candle(1.14, 1.12, 1.13, 1.13, 1000),
+                    Candle(1.13, 1.11, 1.12, 1.12, 1000),
+                ],
+                Trend=[
+                    Candle(1.10, 1.07, 1.08, 1.08, 1000),
+                    Candle(1.07, 1.04, 1.05, 1.05, 1000),
+                    Candle(1.04, 1.01, 1.02, 1.02, 1000),
+                    Candle(1.03, 1.00, 1.01, 1.02, 1000),
+                ],
+                Params=TradeParams(
+                    direction=Direction.DOWN, finish=True, tp=0.0, sl=0.0
+                ),
+            ),
+            Segment(
+                Pre=[
+                    Candle(1.10, 1.07, 1.08, 1.08, 1000),
+                    Candle(1.07, 1.04, 1.05, 1.05, 1000),
+                    Candle(1.04, 1.01, 1.02, 1.02, 1000),
+                    Candle(1.03, 1.00, 1.01, 1.02, 1000),
+                ],
+                Trend=[
+                    Candle(1.06, 1.03, 1.04, 1.05, 1000),
+                    Candle(1.09, 1.06, 1.07, 1.08, 1000),
+                    Candle(1.12, 1.09, 1.10, 1.11, 1000),
+                ],
+                Params=TradeParams(direction=Direction.UP, finish=True, tp=0.0, sl=0.0),
+            ),
+        ],
+    },
+    {
+        "name": "9. Two downtrends with bullish candle in between",
+        "df": pd.DataFrame(
+            [
+                # Flat candles before first downtrend
+                {
+                    "high": 1.20,
+                    "low": 1.18,
+                    "open": 1.19,
+                    "close": 1.19,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.21,
+                    "low": 1.19,
+                    "open": 1.20,
+                    "close": 1.20,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.22,
+                    "low": 1.20,
+                    "open": 1.21,
+                    "close": 1.21,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.21,
+                    "low": 1.19,
+                    "open": 1.20,
+                    "close": 1.20,
+                    "volume": 1000,
+                },
+                # First downtrend
+                {
+                    "high": 1.18,
+                    "low": 1.15,
+                    "open": 1.17,
+                    "close": 1.16,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.15,
+                    "low": 1.12,
+                    "open": 1.14,
+                    "close": 1.13,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.12,
+                    "low": 1.09,
+                    "open": 1.10,
+                    "close": 1.10,
+                    "volume": 1000,
+                },
+                # Bullish candle (stopping downtrend)
+                {
+                    "high": 1.14,
+                    "low": 1.10,
+                    "open": 1.11,
+                    "close": 1.13,
+                    "volume": 1000,
+                },
+                # Second downtrend
+                {
+                    "high": 1.13,
+                    "low": 1.10,
+                    "open": 1.12,
+                    "close": 1.11,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.10,
+                    "low": 1.07,
+                    "open": 1.09,
+                    "close": 1.08,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.08,
+                    "low": 1.05,
+                    "open": 1.07,
+                    "close": 1.06,
+                    "volume": 1000,
+                },
+                {
+                    "high": 1.07,
+                    "low": 1.04,
+                    "open": 1.06,
+                    "close": 1.05,
+                    "volume": 1000,
+                },
+                # Bullish candle (stopping second downtrend)
+                {
+                    "high": 1.08,
+                    "low": 1.05,
+                    "open": 1.06,
+                    "close": 1.07,
+                    "volume": 1000,
+                },
+            ]
+        ),
+        "expected": [
+            Segment(
+                Pre=[
+                    Candle(1.20, 1.18, 1.19, 1.19, 1000),
+                    Candle(1.21, 1.19, 1.20, 1.20, 1000),
+                    Candle(1.22, 1.20, 1.21, 1.21, 1000),
+                    Candle(1.21, 1.19, 1.20, 1.20, 1000),
+                ],
+                Trend=[
+                    Candle(1.18, 1.15, 1.17, 1.16, 1000),
+                    Candle(1.15, 1.12, 1.14, 1.13, 1000),
+                    Candle(1.12, 1.09, 1.10, 1.10, 1000),
+                ],
+                Params=TradeParams(
+                    direction=Direction.DOWN, finish=True, tp=0.0, sl=0.0
+                ),
+            ),
+            Segment(
+                Pre=[
+                    Candle(1.21, 1.19, 1.20, 1.20, 1000),
+                    Candle(1.18, 1.15, 1.17, 1.16, 1000),
+                    Candle(1.15, 1.12, 1.14, 1.13, 1000),
+                    Candle(1.12, 1.09, 1.10, 1.10, 1000),
+                ],
+                Trend=[
+                    Candle(1.14, 1.10, 1.11, 1.13, 1000),
+                    Candle(1.13, 1.10, 1.12, 1.11, 1000),
+                    Candle(1.10, 1.07, 1.09, 1.08, 1000),
+                    Candle(1.08, 1.05, 1.07, 1.06, 1000),
+                    Candle(1.07, 1.04, 1.06, 1.05, 1000),
+                ],
+                Params=TradeParams(
+                    direction=Direction.DOWN, finish=True, tp=0.0, sl=0.0
+                ),
+            ),
+        ],
+    },
 ]
 
 

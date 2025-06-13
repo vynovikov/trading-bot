@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import pandas as pd
 
@@ -22,27 +22,26 @@ class Marker:
         while i < len(df):
             c0 = self.idx_to_candle(i - 1, df)
             c1 = self.idx_to_candle(i, df)
-            c2 = Candle(0.0, 0.0, 0.0, 0.0, 0.0)
-            c3 = Candle(0.0, 0.0, 0.0, 0.0, 0.0)
-            if i < len(df) - 1:
-                c2 = self.idx_to_candle(i + 1, df)
-            if i < len(df) - 2:
-                c3 = self.idx_to_candle(i + 2, df)
+            c2: Optional[Candle] = (
+                self.idx_to_candle(i + 1, df) if i + 1 < len(df) else None
+            )
+            c3: Optional[Candle] = (
+                self.idx_to_candle(i + 2, df) if i + 2 < len(df) else None
+            )
 
-            if (
-                c3.low != 0.0
-                and c1.low < c2.low < c3.low
-                and c1.high < c2.high < c3.high
-            ):
+            if self.is_uptrend_started(segment.get_direction(), c0, c1, c2, c3):
                 match segment.get_direction():
                     case Direction.UNKNOWN:
                         segment.add_to_pre(df, i, self.a_len)
                         segment.set_direction(Direction.UP)
+
+                        assert c2 is not None and c3 is not None
                         segment.add_to_trend(c1, c2, c3)
 
                         i += 3
                         continue
                     case Direction.UP:
+                        assert c2 is not None and c3 is not None
                         segment.add_to_trend(c1, c2, c3)
 
                         i += 3
@@ -54,59 +53,54 @@ class Marker:
                         i += 1
                         continue
 
-            if (
-                c3.low != 0.0
-                and c1.low > c2.low > c3.low
-                and c1.high > c2.high > c3.high
-            ):
+            if self.is_downtrend_started(segment.get_direction(), c0, c1, c2, c3):
                 match segment.get_direction():
                     case Direction.UNKNOWN:
                         segment.add_to_pre(df, i, self.a_len)
                         segment.set_direction(Direction.DOWN)
+
+                        assert c2 is not None and c3 is not None
                         segment.add_to_trend(c1, c2, c3)
 
                         i += 3
                         continue
                     case Direction.DOWN:
+                        assert c2 is not None and c3 is not None
                         segment.add_to_trend(c1, c2, c3)
 
                         i += 3
                         continue
 
             if segment.get_direction() == Direction.UP:
-                if c1.high > c2.high:
+                if c0.high > c1.high:
+                    segment.set_finish()
+                elif c2 and c1.high > c2.high:
                     segment.set_finish()
                     segment.add_to_trend(c1)
-
                     i += 1
-                if c1.high == c2.high and c1.high > c3.high:
+                elif c2 and c3 and c1.high <= c2.high and c2.high > c3.high:
                     segment.set_finish()
                     segment.add_to_trend(c1, c2)
-
                     i += 2
 
             if segment.get_direction() == Direction.DOWN:
-
                 if c0.low < c1.low:
                     segment.set_finish()
-
-                if c0.low > c1.low and c1.low < c2.low:
+                elif c2 and c1.low < c2.low:
                     segment.set_finish()
                     segment.add_to_trend(c1)
-
                     i += 1
-                if c0.low > c1.low and c1.low == c2.low and c1.low < c3.low:
+                elif c2 and c3 and c1.low >= c2.low and c2.low < c3.low:
                     segment.set_finish()
                     segment.add_to_trend(c1, c2)
-
                     i += 2
 
             if segment.Params.finish:
-                d = self.delta(segment)
-                if self.delta(segment) > 2.5 * avg:
+                if self.is_significant(segment, avg):
                     segments.append(segment)
 
                 segment = Segment()
+
                 continue
 
             i += 1
@@ -137,17 +131,60 @@ class Marker:
         for i in range(idx - self.a_len, idx):
             segment.Pre.append(self.idx_to_candle(i, df))
 
-    def delta(self, segment: Segment) -> float:
+    def is_significant(self, segment: Segment, avg: float) -> bool:
         if not segment.Trend:
-            return 0.0
+            return False
 
         first_candle = segment.Trend[0]
         last_candle = segment.Trend[-1]
+        value = 0.0
 
         match segment.Params.direction:
             case Direction.UP:
-                return last_candle.high - first_candle.open
+                value = last_candle.high - first_candle.open
             case Direction.DOWN:
-                return first_candle.open - last_candle.low
-            case _:
-                return 0.0
+                value = first_candle.open - last_candle.low
+
+        return value > avg * 2.5
+
+    def is_uptrend_started(
+        self,
+        direction: Direction,
+        c0: Candle,
+        c1: Candle,
+        c2: Optional[Candle],
+        c3: Optional[Candle],
+    ) -> bool:
+        if not c2 or not c3:
+            return False
+
+        return (
+            direction == Direction.UP
+            and c0.low < c1.low < c2.low < c3.low
+            and c0.high < c1.high < c2.high < c3.high
+        ) or (
+            direction == Direction.UNKNOWN
+            and c1.low <= c2.low <= c3.low
+            and c1.high <= c2.high <= c3.high
+        )
+
+    def is_downtrend_started(
+        self,
+        direction: Direction,
+        c0: Candle,
+        c1: Candle,
+        c2: Optional[Candle],
+        c3: Optional[Candle],
+    ) -> bool:
+        if not c2 or not c3:
+            return False
+
+        return (
+            direction == Direction.DOWN
+            and c0.low > c1.low > c2.low > c3.low
+            and c0.high > c1.high > c2.high > c3.high
+        ) or (
+            direction == Direction.UNKNOWN
+            and c1.low >= c2.low >= c3.low
+            and c1.high >= c2.high >= c3.high
+        )
